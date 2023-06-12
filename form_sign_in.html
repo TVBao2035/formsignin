@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        #body{
+            width: 100%;
+            height: 1000px;
+            background-image:linear-gradient(45deg,rgb(0, 0, 0),#ffffff);
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        #formSignIn{
+            width: 400px;
+            height: 500px;
+            border-radius: 40px;
+            background-color: white;
+            position: relative;
+            left: 30%;
+            top: 10%;
+        }
+        #form-h1{
+            position: relative;
+            top: 30px;
+            left:150px;
+        }
+        .form-group{
+            position: relative;
+            display:block;
+            top: 50px;
+            margin-top: 10px;
+        }
+        .form-label{
+            margin-top: 50px;
+            margin-left: 20px;
+        }
+        .form-input{
+            width: 350px;
+            height:30px;
+            border-style: groove;
+            border-color: #b6b5b5;
+            display:block;
+            position:relative;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .text-messenger{
+            display: block;
+            margin-top:5px;
+            margin-left:25px;
+            font-size: 11px;
+        }
+        #form-submit{
+            background-color: rgb(240, 237, 237);
+            border-radius: 50px;
+            border-color: rgb(255, 255, 255);
+            padding: 5px 20px;
+            display: block;
+            position: absolute;
+            bottom:50px;
+            left:150px
+        }
+        .form-input:hover{
+            border-color:#15ff00;
+        } 
+        #form-submit:hover{
+            border-color: #15ff00;
+        }
+        .exitError{
+           .form-input{
+            border-color: red;
+           }
+           .text-messenger{
+            color:red;
+           }
+        }
+        #text-successful{
+            display: block;
+            position: relative;
+            margin-top: 260px;
+            margin-left: 150px;
+            font-size: 20px;
+            color:#15ff00
+        }
+    </style>
+</head>
+<body id="body">
+    <form action="" id="formSignIn">
+
+        <h1 id="form-h1">Sign in</h1>
+
+        <div class="form-group" >
+            <label for="fullName" class="form-label" id="full-name"><b>Full Name:</b></label>
+            <input id="getName" type="text" class="form-input" placeholder="VD: Trương Văn Bảo">
+            <span class="text-messenger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="fullName" class="form-label" ><b>Email:</b></label>
+            <input id="getEmail" type="text" class="form-input" placeholder="VD: bao@gmail.com">
+            <span class="text-messenger"></span>
+        </div>
+        <input type="button" value="Submit" id="form-submit">
+        <span id="text-successful"></span>
+    </form>
+    <script>
+          // function kiểm tra có phải là email hay không
+          var email = function (isEmail,value){
+                if(isEmail){
+                    var check = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    return check.test(value) ? "" : "Đây không phải là email!";
+                }
+                return "";
+            }
+        function blurElement (selection, text, isEmail){
+            var inputElement = document.getElementById(selection);
+            var spanElement = inputElement.parentNode.querySelector("span");
+            var parent = inputElement.parentElement;
+
+            // function kiểm tra có phải là email hay không
+
+            //bắt sự kiện khi nhấn vào vị trí nhập
+            inputElement.onblur = function(){
+                if(!inputElement.value){
+                    parent.classList.add("exitError");
+                    spanElement.innerText = text;
+                }
+                //kiểm tra email có phải là email không
+                if(inputElement.value  && isEmail){
+                    if(email(isEmail,inputElement.value) != ""){
+                        spanElement.innerText = email(isEmail);
+                        parent.classList.add("exitError");
+                    }
+                }
+            }
+            //nếu nhập thì bỏ lỗi
+            inputElement.oninput = function(){
+                parent.classList.remove("exitError");
+                spanElement.innerText = "";
+            }
+        }
+        //Nhấn submit
+        var clickSubmit = document.getElementById("form-submit");
+            clickSubmit.onclick = function(){
+               var divElement = clickSubmit.parentNode.querySelectorAll("div");
+               var spanElement = clickSubmit.parentNode.querySelectorAll("span");
+               var spanSuccessful = document.getElementById("text-successful");
+               for(var i=0;i<divElement.length-1;i++){
+                    if(!divElement[i].querySelector("input").value ){
+                        divElement[i].classList.add("exitError");
+                        spanElement[i].innerText = "Dữ liệu chưa nhập!";
+                    }
+                    else if(email(true ,document.getElementById("getEmail").value) != ""){
+                        spanElement[1].innerText = "Đây không phải là email";
+                    }
+                    else {
+                        divElement[i].classList.remove("exitError");
+                        spanElement[i].innerText = "";
+                        spanSuccessful.innerText = "Successful !";
+                    }
+               }
+            } 
+            
+        //call back
+        blurElement("getName","Vui lòng nhập họ tên",false);
+        blurElement("getEmail","Vui lòng nhập email",true);
+        
+    </script>
+</body>
+</html>
